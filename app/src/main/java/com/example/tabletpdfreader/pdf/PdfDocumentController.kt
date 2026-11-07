@@ -347,7 +347,7 @@ class PdfDocumentController(private val context: Context) {
             fun makeItem(title: String, pageIdx: Int): PDOutlineItem {
                 return PDOutlineItem().apply {
                     this.title = title
-                    this.destination = pdDoc.getPage(pageIdx)
+                    setDestination(pdDoc.getPage(pageIdx))
                 }
             }
 

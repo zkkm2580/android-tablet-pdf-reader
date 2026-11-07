@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0F172A"
+    android:orientation="vertical">
+
+    <!-- 顶部平板工具栏：大触控热区、自适应标题与功能按钮 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#1E293B"
+        android:gravity="center_vertical"
+        android:minHeight="60dp"
+        android:orientation="horizontal"
+        android:paddingStart="12dp"
+        android:paddingTop="6dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="6dp">
+
+        <Button
+            android:id="@+id/btnToggleSidePanel"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="42dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="收起目录"
+            android:textColor="#E2E8F0"
+            android:textSize="13sp"
+            app:strokeColor="#475569" />
+
+        <Button
+            android:id="@+id/btnOpenPdf"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="42dp"
+            android:layout_marginStart="6dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="📂 打开PDF"
+            android:textColor="#93C5FD"
+            android:textSize="13sp" />
+
+        <Button
+            android:id="@+id/btnRecentOrSample"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="42dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="🕘 最近/示例"
+            android:textColor="#CBD5E1"
+            android:textSize="13sp" />
+
+        <!-- 中间文档名与当前章节提示 -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/docTitleText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="平板PDF阅读器"
+                android:textColor="#F8FAFC"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/docSubtitleText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="点击左侧目录或滑动页面开始阅读"
+                android:textColor="#94A3B8"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!-- 右侧翻页方向切换、书签、护眼模式 -->
+        <Button
+            android:id="@+id/btnToggleSwipeMode"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="42dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="⇄ 左右翻页"
+            android:textColor="#FDE68A"
+            android:textSize="13sp"
+            app:strokeColor="#64748B" />
+
+        <Button
+            android:id="@+id/btnBookmarkCurrentPage"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="42dp"
+            android:layout_marginStart="8dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="☆ 添加书签"
+            android:textColor="#FCD34D"
+            android:textSize="13sp"
+            app:strokeColor="#64748B" />
+
+        <Button
+            android:id="@+id/btnToggleTheme"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="42dp"
+            android:layout_marginStart="4dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="☀ 日间"
+            android:textColor="#E2E8F0"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <!-- 主体区域：左侧平板分栏（目录 / 书签） + 右侧高清 PDF 阅读区 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <!-- 左侧分栏抽屉（平板默认展开 320dp，支持一键收起全屏阅读） -->
+        <LinearLayout
+            android:id="@+id/sidePanelContainer"
+            android:layout_width="320dp"
+            android:layout_height="match_parent"
+            android:background="#F8FAFC"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#F1F5F9"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="12dp"
+                android:paddingEnd="8dp">
+
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/sideTabLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="46dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    app:tabIndicatorColor="#2563EB"
+                    app:tabSelectedTextColor="#1D4ED8"
+                    app:tabTextColor="#475569">
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="目录" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="书签" />
+                </com.google.android.material.tabs.TabLayout>
+
+                <TextView
+                    android:id="@+id/btnCloseSidePanel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:text="✕"
+                    android:textColor="#64748B"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- 搜索过滤框：快速检索目录章节或书签笔记 -->
+            <EditText
+                android:id="@+id/searchSideEditText"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/bg_search_box"
+                android:hint="🔍 搜索目录章节、书签或页码..."
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:maxLines="1"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:textColor="#0F172A"
+                android:textColorHint="#94A3B8"
+                android:textSize="13sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#E2E8F0" />
+
+            <!-- 目录列表页 -->
+            <FrameLayout
+                android:id="@+id/tocPanelContent"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:visibility="visible">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/tocRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="16dp" />
+            </FrameLayout>
+
+            <!-- 书签列表页 -->
+            <LinearLayout
+                android:id="@+id/bookmarkPanelContent"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <Button
+                    android:id="@+id/btnAddBookmarkInPanel"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="42dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginBottom="4dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:text="＋ 为当前阅读页添加/编辑书签"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"
+                    app:backgroundTint="#2563EB" />
+
+                <TextView
+                    android:id="@+id/bookmarkEmptyText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="28dp"
+                    android:text="暂无书签\n点击上方按钮或右上角「☆ 添加书签」即可标记重点页面"
+                    android:textColor="#64748B"
+                    android:textSize="13sp"
+                    android:visibility="gone" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/bookmarkRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="16dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- 分栏分割线 -->
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#334155" />
+
+        <!-- 右侧核心 PDF 阅读区 -->
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/pdfViewPager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <!-- 底部快速翻页与页码进度条控制栏 -->
+            <LinearLayout
+                android:id="@+id/bottomControlBar"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:layout_gravity="bottom"
+                android:background="#D90F172A"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp">
+
+                <Button
+                    android:id="@+id/btnPrevPage"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:text="◀ 上一页"
+                    android:textColor="#E2E8F0"
+                    android:textSize="13sp" />
+
+                <SeekBar
+                    android:id="@+id/pageSeekBar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:max="10"
+                    android:progress="0" />
+
+                <Button
+                    android:id="@+id/pageIndicatorButton"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="38dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:text="第 1 / 1 页"
+                    android:textColor="#F8FAFC"
+                    android:textSize="13sp"
+                    app:strokeColor="#475569" />
+
+                <Button
+                    android:id="@+id/btnNextPage"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="6dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:text="下一页 ▶"
+                    android:textColor="#E2E8F0"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <!-- 文档加载遮罩 -->
+            <FrameLayout
+                android:id="@+id/loadingOverlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#800F172A"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone">
+
+                <ProgressBar
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_gravity="center" />
+            </FrameLayout>
+        </FrameLayout>
+    </LinearLayout>
+</LinearLayout>
